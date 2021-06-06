@@ -1,0 +1,134 @@
+﻿<Window x:Class="CourseWork_1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseWork_1"
+        mc:Ignorable="d"
+        Title="Учёт персонала" Height="720" Width="1280" Loaded="Window_Loaded" 
+        ResizeMode="CanMinimize" Icon="/png-clipart-computer-icons-person-user-spark-icon-people-share-icon-thumbnail.png">
+    <Window.Resources>
+        <CollectionViewSource x:Key="employeeViewSource"/>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="10,10"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="ColumnWidth" Value="100"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <DataGrid x:Name="employeeDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" 
+                  ItemsSource="{Binding Source={StaticResource employeeViewSource}}"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  FontFamily="Segoe UI" FontSize="14" HorizontalContentAlignment="Center" 
+                  VerticalContentAlignment="Top" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
+                   CanUserSortColumns="False" Margin="10,10" Height="600" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Employee_Id}" Header="Идентификатор"
+                                    Width="50" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding FirstName}" Header="Имя" Width="120">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding LastName}" Header="Фамилия" Width="120">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding MiddleName}" Header="Отчество" Width="120">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="Дата рождения" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding BirthDate}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding HomeAddress}" Header="Домашний адрес" Width="130">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding PhoneNumber}" Header="Телефон" Width="120"/>
+                <DataGridTextColumn Binding="{Binding PassportNumber}" Header="Паспорт" Width="100"/>
+
+                <DataGridTemplateColumn Header="Дата начала работы" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding DateOfEmployment}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Дата окончания действия трудового договора" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding EndDateOfEmployment}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel x:Name="searchStackPanel" Orientation="Horizontal" 
+                        VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                        Grid.Column="0">
+                <TextBox x:Name="searchTextBox" FontFamily="Segoe UI" FontSize="20" Width="200" 
+                        Height="40" VerticalAlignment="Bottom" ToolTip="Введите поисковой запрос" Margin="10,10"/>
+                <Button x:Name="searchButton" Width="50" FontFamily="Segoe MDL2 Assets" 
+                        Content="&#xE11A;" FontSize="20" ToolTip="Поиск" Click="searchButton_Click"/>
+                <Button x:Name="resetSearchButton" Width="50" FontFamily="Segoe MDL2 Assets" 
+                        Content="&#xE10E;" FontSize="20" ToolTip="Сбросить результаты поиска" 
+                        Click="resetSearchAsyncButton_Click"/>
+            </StackPanel>
+            <StackPanel x:Name="mainActionsStackPanel" HorizontalAlignment="Right" 
+                        VerticalAlignment="Bottom" Orientation="Horizontal"
+                        Grid.Column="2">
+                <Button x:Name="SaveChangesButton" VerticalAlignment="Bottom" 
+                        HorizontalAlignment="Right" 
+                        Content="Сохранить" ToolTip="Сохранить все внесённые изменения в базе данных"
+                        Click="SaveChangesAsyncButton_Click"/>
+                <Button x:Name="AddRowButton" VerticalAlignment="Bottom" 
+                        HorizontalAlignment="Right" Content="Добавить"
+                        ToolTip="Добавить новую строку в таблицу для её заполнения"
+                        Click="AddRowAsyncButton_Click"/>
+                <Button x:Name="DeleteRowButton" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right" Content="Удалить"
+                        ToolTip="Удалить выбранную запись из базы данных. Изменения сохранятся автоматически"
+                        Click="DeleteRowAsyncBottom_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
